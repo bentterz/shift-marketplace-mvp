@@ -3,8 +3,7 @@ import Container from "@/components/Container";
 import ListingCard from "@/components/ListingCard";
 
 async function fetchListings() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-  const res = await fetch(`${baseUrl}/api/listings`, { cache: "no-store" });
+  const res = await fetch("/api/listings", { cache: "no-store" });
   return res.json();
 }
 
