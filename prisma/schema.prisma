@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String?  @unique
+  name      String?
+  phone     String?
+  createdAt DateTime @default(now())
+  listings  Listing[]
+}
+
+model Listing {
+  id          String   @id @default(cuid())
+  sellerId    String?
+  seller      User?    @relation(fields: [sellerId], references: [id])
+  title       String
+  description String
+  category    String
+  subcategory String?
+  condition   String    // New, Like New, Good, Fair, For Parts
+  price       Int       // store in minor units (pence)
+  currency    String    // e.g., GBP, USD
+  location    String?
+  lat         Float?
+  lng         Float?
+  attributes  Json
+  photos      Photo[]
+  status      String    @default("active") // active, sold, hidden
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id])
+  url       String
+  width     Int?
+  height    Int?
+  blurhash  String?
+  order     Int       @default(0)
+}
